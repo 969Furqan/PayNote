@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Required on Android 13+ (API 33+) to post the Shizuku-style inline prompt notification -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".PayNoteApplication"
+        android:allowBackup="true"
+        android:label="PayNote"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PayNote"
+        tools:targetApi="34">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.QuickEntryActivity" android:exported="false"
+            android:taskAffinity="com.paynote.app.quickentry" android:excludeFromRecents="true"
+            android:theme="@style/Theme.PayNote.QuickEntry" />
+
+        <receiver android:name=".widget.PayNoteWidget" android:exported="false" android:label="PayNote">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/paynote_widget_info" />
+        </receiver>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- Background Listener that intercepts Wallet, Banking, and SMS Notifications -->
+        <service
+            android:name=".service.TransactionNotificationService"
+            android:exported="true"
+            android:label="PayNote Transaction Auto-Detector"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Handles inline RemoteInput replies (Shizuku-style inline purpose entry) and Quick-Category actions -->
+        <receiver
+            android:name=".receiver.PurposeReplyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.paynote.app.ACTION_REPLY_PURPOSE" />
+                <action android:name="com.paynote.app.ACTION_QUICK_CATEGORY" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>

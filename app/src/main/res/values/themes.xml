@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="launcher_background">#204E37</color>
+    <style name="Theme.PayNote" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F6F7F2</item>
+        <item name="android:colorAccent">#204E37</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:fontFamily">sans</item>
+    </style>
+</resources>
